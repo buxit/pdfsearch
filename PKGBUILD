@@ -1,18 +1,17 @@
-# Maintainer: "Trilby" <jmcclure [at] cns [dot] umass [dot] edu>
-# contributor: static DOT vortex AT gmx.com
-pkgname=leela-git
+# Maintainer: "till busch" <buti@bux.at>
+pkgname=pdfsearch-git
 pkgver=12.fe7a35a
 pkgrel=1
 pkgdesc="CLI frontend to poppler-glib of PDF tools"
-url="http://github.com/TrilbyWhite/Leela"
+url="https://github.com/buxit/pdfsearch.git"
 arch=('any')
 license=('GPLv3')
 depends=('poppler-glib' 'ghostscript')
 makedepends=('git')
 md5sums=('SKIP')
 
-source=("git://github.com/TrilbyWhite/Leela.git")
-_gitname="Leela"
+source=("https://github.com/buxit/pdfsearch")
+_gitname="pdfsearch"
 
 pkgver() {
 	cd "$_gitname"

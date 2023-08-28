@@ -1,38 +1,7 @@
-Leela is a CLI frontend to the poppler-glib library of PDF functions.
+pdfsearch searches a PDF file for words. If matches were found, the
+resulting document with highlights is saved to 'output'.
 
-USAGE: leela command [ n1 n2 ... nN ] pdf output
-  command     command from the list below
-  n1...nN     range of pages to act on (defaul=all)
-  pdf         filename of input pdf file
-  output      select output type or filename
-
-COMMANDS:
-  annots      extract annotations in an xml format
-  append      append pages from input onto output
-  attachments extract attacments from input into outputXXX [EXPERIMENTAL]
-  data        display data about pdf
-  help        show this help menu and exit
-  images      extract images from input into output
-  pages       extract pages from input into output
-  render      render annotations onto output [EXPERIMENTAL]
-  shrink      render for screen, often reduces file size
-  text        extract text of pdf file
-
-COMMAND SPECIFIC OPTIONS:
-Unless otherwise specified below, the 'output' option will specify the name of file to which output should be directed.  Exceptions are as follows:
-  append      a second pdf to append to
-  attachments a basename for the output files
-  data        optionally specify which information is desired:
-                <options comming soon>
-
-PAGE SPECIFIERS:
-Most commands can accept a page range on which to act.  Page numbers are listed as numbers separated by spaces, enclosed in square brackets (also separated by spaces).  Shell options can be used to simplify large ranges.  For example, in bash one may extract annotations specifically from pages 1-9, 13-20, and 22-25 as follows:
-
-$ leela annots [ {1..9} {13..20} {22..25} ] input.pdf
-
-WHY THE NAME
-First see how the poppler library got its name:
-http://www.gotfuturama.com/Information/Encyc-41-Popplers/
-
-Leela was for poppler freedom.  Leela was a poppler advocate.  And of course, Leela was the first one to EAT poppler!
-
+USAGE: pdfsearch <pdf> <search string> <output>
+  pdf            filename of input pdf
+  search string  words to search and highlight (separated by |)
+  output         output filename
