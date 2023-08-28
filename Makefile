@@ -1,4 +1,4 @@
-PROG	=	leela
+PROG	=	pdfsearch
 CFLAGS	+=	-Os `pkg-config --cflags poppler-glib cairo`
 LDFLAGS	+=	`pkg-config --libs poppler-glib cairo`
 PREFIX	?=	/usr
@@ -8,8 +8,8 @@ ${PROG}: ${PROG}.c
 	@gcc -o ${PROG} ${PROG}.c ${CFLAGS} ${LDFLAGS}
 
 install: ${PROG}
-	@install -Dm755 leela ${DESTDIR}${PREFIX}/bin/leela
-	@install -Dm644 leela.1 ${DESTDIR}${MANDIR}/man1/leela.1
+	@install -Dm755 pdfsearch ${DESTDIR}${PREFIX}/bin/pdfsearch
+	# @install -Dm644 pdfsearch.1 ${DESTDIR}${MANDIR}/man1/pdfsearch.1
 
 clean:
-	@rm -f leela
+	@rm -f pdfsearch
