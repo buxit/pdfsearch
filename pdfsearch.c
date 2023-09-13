@@ -54,7 +54,6 @@ void pdfsearch_search(PopplerDocument *pdf, const gchar* searchstring, const gch
 		gchar *word = words[w];
 		while (word)
 		{
-			garray = g_array_new(FALSE, FALSE, sizeof(PopplerQuadrilateral));
 			// poppler_page_get_size (page, &width, &height);
 			// POPPLER_FIND_IGNORE_DIACRITICS // requires pure ascii input
 			rects = poppler_page_find_text_with_options(page, word, POPPLER_FIND_MULTILINE);
@@ -63,14 +62,15 @@ void pdfsearch_search(PopplerDocument *pdf, const gchar* searchstring, const gch
 				matches++;
 				PopplerRectangle *r = list->data;
 				PopplerQuadrilateral q;
+				garray = g_array_new(FALSE, FALSE, sizeof(PopplerQuadrilateral));
 				q.p1.x = r->x1;
-				q.p1.y = r->y1;
+				q.p1.y = r->y2;
 				q.p2.x = r->x2;
-				q.p2.y = r->y1;
-				q.p4.x = r->x2;
-				q.p4.y = r->y2;
+				q.p2.y = r->y2;
 				q.p3.x = r->x1;
-				q.p3.y = r->y2;
+				q.p3.y = r->y1;
+				q.p4.x = r->x2;
+				q.p4.y = r->y1;
 				g_array_append_val(garray, q);
 				fprintf(stderr, "    match '%s' at %0.2f %0.2f %0.2f %0.2f\n", word, r->x1, r->y1, r->x2, r->y2);
 				annot = poppler_annot_text_markup_new_highlight(pdf, r, garray);
@@ -78,16 +78,20 @@ void pdfsearch_search(PopplerDocument *pdf, const gchar* searchstring, const gch
 				PopplerColor pc;
 				pc.red = 0xffff;
 				pc.green = 0xffff;
-				pc.blue = 0x0;
+				pc.blue =  0x4444;
 				poppler_annot_set_color(annot, &pc);
 				poppler_annot_set_contents(annot, word);
-
 				poppler_page_add_annot(page, annot);
+
+				g_array_unref(garray);
+				g_object_unref(annot);
 			}
-			g_array_unref(garray);
+			g_list_free_full(rects, free);
 			word = words[++w];
 		}
+		g_object_unref(page);
 	}
+	g_strfreev(words);
 	if(matches) {
 		gchar *path = g_path_get_dirname(outfile);
 		// fprintf(stderr, "path='%s'\n", path);
@@ -101,6 +105,7 @@ void pdfsearch_search(PopplerDocument *pdf, const gchar* searchstring, const gch
 		uri = g_filename_to_uri(abspath, NULL, &gerror);
 		// fprintf(stderr, "uri='%s'\n", uri);
 		poppler_document_save(pdf, uri, &gerror);
+		g_free(uri);
 		g_free(abspath);
 		g_free(rpath);
 		g_free(basename);
@@ -138,6 +143,8 @@ PopplerDocument *open_pdf(const char *arg)
 	strcat(uri, fullpath);
 	free(fullpath);
 	PopplerDocument *pdf = poppler_document_new_from_file(uri, NULL, NULL);
+	if(!pdf)
+		fprintf(stderr, "Failed to open document.\n");
 	free(uri);
 	return pdf;
 }
@@ -154,5 +161,6 @@ int main(int argc, const char **argv)
 	const gchar *outfile = argv[i++];
 	PopplerDocument *pdf = open_pdf(filename);
 	pdfsearch_search(pdf, searchstring, outfile);
+	g_object_unref(pdf);
 	return 0;
 }

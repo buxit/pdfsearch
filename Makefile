@@ -5,7 +5,7 @@ PREFIX	?=	/usr
 MANDIR	?=	/usr/share/man
 
 ${PROG}: ${PROG}.c
-	@gcc -o ${PROG} ${PROG}.c ${CFLAGS} ${LDFLAGS}
+	@gcc -g -o ${PROG} ${PROG}.c ${CFLAGS} ${LDFLAGS}
 
 install: ${PROG}
 	@install -Dm755 pdfsearch ${DESTDIR}${PREFIX}/bin/pdfsearch
